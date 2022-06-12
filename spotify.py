@@ -13,8 +13,7 @@ import sqlite3
 
 DATABASE_LOCATION = "sqlite:///my_played_tracks.sqlite"
 USER_ID = "Philipnkwam"
-TOKEN = "BQC3BHSbvU5tkBPPlN8hHIPyfst-wfNpIgv8GN4HIJkaYd4RylNjkz4QAvviRuNjh02TZUAWmuo4kQQR0FuvLcSLj-yIFAJmwr0BPjp2UdP1IONKuG9dJmq5KCgYOTVZXWV2LgRO_ZYSK0sBEB1MAC8Drt06gzPark1KciwIHTEUZxkyrerO2j5fdJyeyPyaSsrX9NPOEg"
-
+TOKEN = "BQC7zyBoD35ZXzBlNjG9gpX6FR_LgUdP2hqQ-BrjY-36K1OiEbDXWmv21WZzth4lU_7d-wdZMexL_Zc6AL0ItW9da6374J7flbDqS67vP2vSkQHFWTsZNDa15IdZDNT71jtGMjEqQCpKc8KlHZduLzcrE3BupAicZljCoqd4wwMd_bJIESz0I1k-wQEyvHsD9z2k4o47kw"
 if __name__ == "__main__":
 
     headers= {
@@ -52,3 +51,5 @@ if __name__ == "__main__":
     
     song_df = pd.DataFrame(song_dict, columns=["song_name", "artist_name", "played_at", "timestamps"])
     print(song_df)
+
+    song_df.to_csv('Data.csv')
