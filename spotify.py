@@ -1,6 +1,7 @@
 from email import header
 from operator import imod
 from wsgiref import headers
+from numpy import RAISE
 import sqlalchemy
 import pandas as pd
 from sqlalchemy.orm import sessionmaker
@@ -13,7 +14,30 @@ import sqlite3
 
 DATABASE_LOCATION = "sqlite:///my_played_tracks.sqlite"
 USER_ID = "Philipnkwam"
-TOKEN = "BQC7zyBoD35ZXzBlNjG9gpX6FR_LgUdP2hqQ-BrjY-36K1OiEbDXWmv21WZzth4lU_7d-wdZMexL_Zc6AL0ItW9da6374J7flbDqS67vP2vSkQHFWTsZNDa15IdZDNT71jtGMjEqQCpKc8KlHZduLzcrE3BupAicZljCoqd4wwMd_bJIESz0I1k-wQEyvHsD9z2k4o47kw"
+TOKEN = "BQDNeEPUJCxqaG12wgX0n39n3ok22nMbDQrb9AxCpd4cCGgCreNYN6Eu2SITHCVm6GsSNDnfEUe4xnaPtH0IprhU9tssPub6SqjYQz2XzOPB-JP2Zn_hzqZ0RjPZVUxCs4pF2doHgT8EKZRzITVexwNVX5r6QanBHK3_Rb20O_IoXjV3tCAlCynj7jb2hUp4H4xoM0X72w"
+
+def check_if_valid_data(df: pd.DataFrame) -> bool:
+    if df.empty:
+        print("No songs downloaded. Finishing execution")
+        return False
+     
+    if pd.Series(df["played_at"]).is_unique:
+        pass
+    else:
+        raise Exception("Primary Key Check is Violated")
+
+    # if df.isnull().values.any():
+    #     raise Exception('Null values found')
+
+
+    yesterday = datetime.datetime.now() - datetime.timedelta(days=1)
+    yesterday = yesterday.replace(hour=0, minute=0, second=0, microsecond=0)
+
+    timestamps = df["timestamp"].tolist()
+    for timestamp in timestamps:
+        if datetime.datetime.strptime(timestamp, "%Y-%m-%d") != yesterday:
+            raise Exception("At least one of the returned song doeas not come within the last 24 hours")
+
 if __name__ == "__main__":
 
     headers= {
@@ -51,5 +75,9 @@ if __name__ == "__main__":
     
     song_df = pd.DataFrame(song_dict, columns=["song_name", "artist_name", "played_at", "timestamps"])
     print(song_df)
+
+    if check_if_valid_data(song_df):
+        print("Data Valid, Proceed to load stage")
+
 
     song_df.to_csv('Data.csv')
